@@ -18,6 +18,7 @@ from django.urls import path, include
 from rest_framework import routers
 from data_api.views import UserViewSet, ArticleViewSet, CommentViewSet
 from graph.views import GraphViewSet
+from django.conf.urls import url
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet, 'user')
@@ -28,4 +29,5 @@ router.register(r'graph', GraphViewSet, 'graph')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    url('get-data/', include('data_api.urls'))
 ]

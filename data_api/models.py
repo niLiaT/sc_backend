@@ -23,3 +23,9 @@ class Comment(models.Model):
     date = models.DateField()
     time = models.TimeField()
     ip = models.CharField(max_length=15)
+
+class CommonComment(models.Model):
+    id = models.CharField(max_length=24, primary_key=True)
+    account1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='common_user1')
+    account2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='common_user2')
+    weight = models.IntegerField(default=0)

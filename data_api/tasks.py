@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 
-from .models import User, Article, Comment
+from .models import User, Article, Comment, CommonComment
 
 def new_session():
     ses = requests.Session()
@@ -118,6 +118,10 @@ def dump_article(session, url):
 
     return article
 
+def unique_id(string1, string2):
+    str_list = sorted([string1, string2])
+    return str_list[0] + str_list[1]
+
 def import_data(raw, url):
     try:
         user = User.objects.create(id=raw['original_poster'])
@@ -128,6 +132,8 @@ def import_data(raw, url):
             title=raw['title'], date=raw['date'], time=raw['time'], ip=raw['ip'], content=raw['content'])
     except IntegrityError:
         pass
+    push_set = set()
+    boo_set = set()
     for comment in raw['comments']:
         try:
             poster = User.objects.create(id=comment['user'])
@@ -141,7 +147,28 @@ def import_data(raw, url):
             pass
         except ValidationError as e:
             print(comment)
-
+        if comment['type'] == '推':
+            push_set.add(poster)
+        elif comment['type'] == '噓':
+            boo_set.add(poster)
+    push_set = [element for element in push_set]
+    for index1 in range(len(push_set) - 1):
+        for index2 in range(index1 + 1, len(push_set)):
+            try:
+                CommonComment.objects.create(id=unique_id(push_set[index1].id, push_set[index2].id), account1=push_set[index1], account2=push_set[index2], weight=1)
+            except IntegrityError:
+                common_comment = CommonComment.objects.get(id=unique_id(push_set[index1].id, push_set[index2].id))
+                common_comment.weight += 1
+                common_comment.save()
+    boo_set = [element for element in boo_set]
+    for index1 in range(len(boo_set) - 1):
+        for index2 in range(index1 + 1, len(boo_set)):
+            try:
+                CommonComment.objects.create(id=unique_id(boo_set[index1].id, boo_set[index2].id), account1=boo_set[index1], account2=boo_set[index2], weight=1)
+            except IntegrityError:
+                common_comment = CommonComment.objects.get(id=unique_id(boo_set[index1].id, boo_set[index2].id))
+                common_comment.weight += 1
+                common_comment.save()
 
 @shared_task(name='update_ptt_data')
 def update_data():

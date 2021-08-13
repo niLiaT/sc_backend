@@ -138,7 +138,7 @@ CORS_ORIGIN_WHITELIST = [
 
 # Celery Configuration Options
 
-CELERY_BROKER_URL = 'amqp://localhost'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'

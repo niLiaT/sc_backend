@@ -1,5 +1,19 @@
 version: "3"
 services:
+    rabbitmq:
+        hostname: rabbitmq
+        image: rabbitmq:latest
+        environment:
+            - DEFAULT_USER=guest
+            - DEFAULT_PASS=guest
+        ports:
+            - "5672:5672"
+
+    redis:
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        
     app:
         restart: always
         build: .

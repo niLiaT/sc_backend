@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#@q@3l621ei)j=s1!hzd9ee^8$7^wsx-athlc768bn5ob8pzvg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cogent-dahlia-289109.de.r.appspot.com', '127.0.0.1']
+ALLOWED_HOSTS = ['sc-backend-333008.de.r.appspot.com', '127.0.0.1']
 
 
 # Application definition
